@@ -1,9 +1,9 @@
 import { Button, message, Typography } from "antd";
-import React, { useEffect, useState } from "react";
-import CategoriesList from "./CategoriesList";
 import useFetch from "feature/base/hooks/useFetch";
-import { Category } from "../types";
+import React, { useEffect, useState } from "react";
 import { CATEGORIES_API } from "../constants";
+import type { Category } from "../types";
+import CategoriesList from "./CategoriesList";
 import CategoryForm from "./CategoryForm";
 
 function Categories() {
@@ -12,11 +12,11 @@ function Categories() {
 		total: number;
 	}>();
 
-  const [postCategoryRes, postCategoryReq] = useFetch<Category>();
-  const [patchCategoryRes, patchCategoryReq] = useFetch<Category>();
-  const [deleteCategoryRes, deleteCategoryReq] = useFetch();
-  const [openDialog, setOpenDialog] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<Category|null>();
+	const [postCategoryRes, postCategoryReq] = useFetch<Category>();
+	const [patchCategoryRes, patchCategoryReq] = useFetch<Category>();
+	const [deleteCategoryRes, deleteCategoryReq] = useFetch();
+	const [openDialog, setOpenDialog] = useState(false);
+	const [selectedCategory, setSelectedCategory] = useState<Category | null>();
 	const [currentPage, setCurrentPage] = useState(1);
 	const fetchCategories = () => {
 		getCategoriesReq({
@@ -33,50 +33,46 @@ function Categories() {
 		fetchCategories();
 	}, []);
 
-	const onDelete = async(data: Category) => {
-    const res = await deleteCategoryReq({
-      url: `${CATEGORIES_API}/${data.id}`,
-      method: 'DELETE'
-    });
+	const onDelete = async (data: Category) => {
+		const res = await deleteCategoryReq({
+			url: `${CATEGORIES_API}/${data.id}`,
+			method: "DELETE",
+		});
 
-    if(res.isSuccess) handleSuccess('Category deleted sucessfully');
-  }
+		if (res.isSuccess) handleSuccess("Category deleted sucessfully");
+	};
 	const onEdit = () => {};
 
 	const onAddClick = () => setOpenDialog(true);
 
-  const onClose = ()=> {
-    setOpenDialog(false);
-    setSelectedCategory(null);
-  }
+	const onClose = () => {
+		setOpenDialog(false);
+		setSelectedCategory(null);
+	};
 
-   const handleSuccess = (msg: string) => {
-    message.success(msg);
-    onClose();
-    fetchCategories();
-  }
+	const handleSuccess = (msg: string) => {
+		message.success(msg);
+		onClose();
+		fetchCategories();
+	};
 
-
-  const onSubmit = async (data: Partial<Category>) => {
-      if(selectedCategory) {
-        const res = await patchCategoryReq({
-          url: `${CATEGORIES_API}/${selectedCategory.id}`,
-          method: 'PATCH',
-          data: data
-        });
-        if(res.isSuccess) handleSuccess('Category updated sucessfully');
-      } else {
-        const res = await postCategoryReq({
-          url: CATEGORIES_API,
-          method: 'POST',
-          data: data
-        });
-        if(res.isSuccess) handleSuccess('Category added sucessfully');
-      }
-  
-      
-    }
-  
+	const onSubmit = async (data: Partial<Category>) => {
+		if (selectedCategory) {
+			const res = await patchCategoryReq({
+				url: `${CATEGORIES_API}/${selectedCategory.id}`,
+				method: "PATCH",
+				data: data,
+			});
+			if (res.isSuccess) handleSuccess("Category updated sucessfully");
+		} else {
+			const res = await postCategoryReq({
+				url: CATEGORIES_API,
+				method: "POST",
+				data: data,
+			});
+			if (res.isSuccess) handleSuccess("Category added sucessfully");
+		}
+	};
 
 	return (
 		<div>
@@ -96,12 +92,16 @@ function Categories() {
 				onEdit={onEdit}
 			/>
 
-      {openDialog &&
-          <CategoryForm
-            userId={selectedCategory?.id}
-            submitResponse={selectedCategory?.id ? patchCategoryRes : postCategoryRes }
-            onSubmit={onSubmit}
-            onClose={onClose} />}
+			{openDialog && (
+				<CategoryForm
+					userId={selectedCategory?.id}
+					submitResponse={
+						selectedCategory?.id ? patchCategoryRes : postCategoryRes
+					}
+					onSubmit={onSubmit}
+					onClose={onClose}
+				/>
+			)}
 		</div>
 	);
 }

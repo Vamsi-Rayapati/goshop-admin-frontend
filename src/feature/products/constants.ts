@@ -1,1 +1,1 @@
-export const PRODUCTS_API = '/catalog/api/v1/products';
+export const PRODUCTS_API = "/catalog/api/v1/products";
