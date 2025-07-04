@@ -60,9 +60,10 @@ function Profile() {
 
 			try {
 				const response = await getUploadUrlReq({
-					url: AVATAR_API + "/upload_url",
+					url: "/storage/api/v1/presign",
 					method: "POST",
 					data: {
+						key: rcFile.name,
 						file_name: rcFile.name,
 						content_type: rcFile.type,
 					},
