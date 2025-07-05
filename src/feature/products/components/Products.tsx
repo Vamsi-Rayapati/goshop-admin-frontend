@@ -18,10 +18,7 @@ function Products() {
 	const breadcrumbItems = urlList
 		.map((url, idx) => {
 			let name = breadcrumbNameMap[url];
-			// Handle dynamic edit route
-			if (!name && url.startsWith("/console/products/edit")) {
-				name = breadcrumbNameMap["/console/products/edit"];
-			}
+
 			if (!name) return null; // Skip if no name
 			return (
 				<Breadcrumb.Item key={url}>

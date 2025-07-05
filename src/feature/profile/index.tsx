@@ -38,10 +38,14 @@ function Profile() {
 		upload_url: string;
 		path: string;
 	}>();
+	const [, getDownloadUrlReq] = useFetch<{
+		download_url: string;
+	}>();
 	const [patchUserRes, patchUserReq] = useFetch<User>();
 	const [openDialog, setOpenDialog] = useState(false);
 	const [, saveAvatarReq] = useFetch();
 	const [avatarUploading, setAvatarUploading] = useState(false);
+	const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
 	const user = getUserRes.data;
 
@@ -50,7 +54,39 @@ function Profile() {
 			url: USERS_API + "/me",
 			method: "GET",
 		});
-	}, []);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []); // Only run once on component mount
+
+	// Fetch avatar download URL when user data changes
+	useEffect(() => {
+		// Reset avatar URL when user avatar changes
+		setAvatarUrl(null);
+
+		if (
+			user?.avatar &&
+			typeof user.avatar === "string" &&
+			user.avatar.trim() !== ""
+		) {
+			getDownloadUrlReq({
+				url: "/storage/api/v1/presign/download",
+				method: "POST",
+				data: {
+					key: "avatar",
+					path: user.avatar,
+				},
+			})
+				.then((response) => {
+					if (response.isSuccess && response.data?.download_url) {
+						setAvatarUrl(response.data.download_url);
+					}
+				})
+				.catch((error) => {
+					console.error("Failed to get avatar download URL:", error);
+					setAvatarUrl(null);
+				});
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [user?.avatar]); // Intentionally excluding getDownloadUrlReq to prevent infinite loops
 
 	const props: UploadProps = {
 		customRequest: async (options) => {
@@ -60,10 +96,10 @@ function Profile() {
 
 			try {
 				const response = await getUploadUrlReq({
-					url: "/storage/api/v1/presign",
+					url: "/storage/api/v1/presign/upload",
 					method: "POST",
 					data: {
-						key: rcFile.name,
+						key: "avatar",
 						file_name: rcFile.name,
 						content_type: rcFile.type,
 					},
@@ -86,7 +122,7 @@ function Profile() {
 					},
 				});
 
-				// Refresh user data
+				// Refresh user data which will trigger avatar URL refresh
 				getUserReq({
 					url: USERS_API + "/me",
 					method: "GET",
@@ -128,6 +164,7 @@ function Profile() {
 			data: payload,
 		}).then(() => {
 			onClose();
+			// Refresh user data which will trigger avatar URL refresh
 			getUserReq({
 				url: USERS_API + "/me",
 				method: "GET",
@@ -177,7 +214,7 @@ function Profile() {
 								<div style={{ position: "relative", cursor: "pointer" }}>
 									<Avatar
 										size={120}
-										src={user?.avatar}
+										src={avatarUrl}
 										icon={<UserOutlined />}
 										style={{
 											border: "4px solid white",

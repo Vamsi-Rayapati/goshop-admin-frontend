@@ -128,11 +128,9 @@ function ProcuctsList() {
 		},
 		{
 			title: "Category",
-			dataIndex: "category_id",
-			key: "category_id",
-			render: (categoryId: number) => (
-				<Tag color="blue">Category {categoryId}</Tag>
-			),
+			dataIndex: "category",
+			key: "category",
+			render: (category: string) => <Tag color="blue">{category}</Tag>,
 		},
 		{
 			title: "Price",
