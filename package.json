@@ -1,6 +1,7 @@
 {
 	"name": "frontend",
 	"version": "0.1.0",
+	"homepage": "/console",
 	"private": true,
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.787.0",

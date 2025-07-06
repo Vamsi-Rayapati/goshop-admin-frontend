@@ -20,6 +20,12 @@ const router = createBrowserRouter([
 			<Navigate to={localStorage.getItem("token") ? "/console" : ROUTE.LOGIN} />
 		),
 	},
+	{ path: ROUTE.LOGIN,  element: <Login /> },
+	{ path: ROUTE.SIGNUP, element: <Signup /> },
+	{
+		path: ROUTE.ONBOARD,
+		element: <Onboard />,
+	},
 	{
 		path: ROUTE.CONSOLE,
 		element: <MainLayout />,
@@ -60,12 +66,7 @@ const router = createBrowserRouter([
 			},
 		],
 	},
-	{ path: ROUTE.LOGIN, element: <Login /> },
-	{ path: ROUTE.SIGNUP, element: <Signup /> },
-	{
-		path: ROUTE.ONBOARD,
-		element: <Onboard />,
-	},
+	
 ]);
 
 export default router;

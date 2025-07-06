@@ -6,7 +6,7 @@ export const ROUTE = {
 	CATEGORIES: "/console/categories",
 	ORDERS: "/console/orders",
 
-	LOGIN: "/auth/login",
-	SIGNUP: "/auth/signup",
-	ONBOARD: "/auth/onboard",
+	LOGIN: "/console/auth/login",
+	SIGNUP: "/console/auth/signup",
+	ONBOARD: "/console/auth/onboard",
 };

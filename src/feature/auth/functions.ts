@@ -1,8 +1,10 @@
 // import jwt from 'jsonwebtoken'
 
+import { ROUTE } from "feature/base/router/constants";
+
 export function handleLogout() {
 	localStorage.clear();
-	if (window.navigate) window.navigate("/auth/login");
+	if (window.navigate) window.navigate(ROUTE.LOGIN);
 }
 
 export function parseJWT() {
