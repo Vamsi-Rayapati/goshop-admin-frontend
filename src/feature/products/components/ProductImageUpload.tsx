@@ -350,20 +350,8 @@ function ProductImageUpload({
 											accept="image/*"
 											showUploadList={false}
 											beforeUpload={(file) => {
-												console.log("beforeUpload called:", {
-													fileName: file.name,
-													isUploadReady,
-												});
-
 												// Check if this slot can be used (sequential upload)
 												const nextSlot = getNextAvailableSlot();
-												console.log(
-													"Next available slot:",
-													nextSlot,
-													"Current slot:",
-													index,
-												);
-
 												if (nextSlot !== -1 && nextSlot !== index) {
 													message.warning(
 														`Please upload images in sequence. Next available slot is ${nextSlot + 1}`,
@@ -376,7 +364,6 @@ function ProductImageUpload({
 													return false;
 												}
 
-												console.log("About to call handleFileSelect");
 												handleFileSelect(file, index);
 												return false;
 											}}

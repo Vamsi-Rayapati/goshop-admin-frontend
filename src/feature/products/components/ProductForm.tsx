@@ -36,14 +36,6 @@ function ProductForm({
 		onSuccess,
 	});
 
-	// Debug the imageUpload object
-	console.log("ProductForm imageUpload object:", imageUpload);
-	console.log(
-		"ProductForm imageUpload.handleUpload:",
-		typeof imageUpload.handleUpload,
-		imageUpload.handleUpload,
-	);
-
 	return (
 		<div className="max-w-6xl mx-auto p-6 space-y-6">
 			<Title level={2} className="text-center mb-8">

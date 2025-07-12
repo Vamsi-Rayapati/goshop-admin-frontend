@@ -1,5 +1,5 @@
 import { Form, message } from "antd";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import useFetch from "../../base/hooks/useFetch";
 import { PRODUCTS_API } from "../constants";
 import type { Product } from "../types";
@@ -35,7 +35,24 @@ export function useProductForm({
 		() => savedProduct?.id || productId,
 		[savedProduct?.id, productId],
 	);
-	const imageUpload = useProductImages(imageProductId);
+
+	// Handle product updates from image upload
+	const handleProductUpdate = useCallback(
+		(updatedProduct: Product) => {
+			setSavedProduct(updatedProduct);
+			// Also trigger onSuccess if provided
+			if (onSuccess) {
+				onSuccess(updatedProduct);
+			}
+		},
+		[onSuccess],
+	);
+
+	const imageUpload = useProductImages(
+		imageProductId,
+		savedProduct,
+		handleProductUpdate,
+	);
 
 	// Fetch product data for edit mode
 	// biome-ignore lint/correctness/useExhaustiveDependencies: Avoiding infinite loop
@@ -71,19 +88,10 @@ export function useProductForm({
 				// Set savedProduct for edit mode so upload button is available
 				setSavedProduct(productData);
 
-				// Load existing images only once per product
-				imageUpload.loadProductImages(productData.id);
 				setLastLoadedProductId(productData.id);
 			}
 		}
-	}, [
-		mode,
-		initialProduct,
-		getProductRes.data,
-		form,
-		imageUpload.loadProductImages,
-		lastLoadedProductId,
-	]);
+	}, [mode, initialProduct, getProductRes.data, form, lastLoadedProductId]);
 
 	const handleFormChange = () => {
 		const values = form.getFieldsValue();
@@ -168,12 +176,8 @@ export function useProductForm({
 			isUploading: imageUpload.isUploading,
 			uploadProgress: imageUpload.uploadProgress,
 			existingImages: imageUpload.existingImages,
-			isLoadingImages: imageUpload.isLoadingImages,
-			uploadImages: imageUpload.uploadImages,
 			handleUpload: imageUpload.handleUpload,
-			loadProductImages: imageUpload.loadProductImages,
 			setPrimaryImage: imageUpload.setPrimaryImage,
-			deleteImage: imageUpload.deleteImage,
 		},
 	};
 }

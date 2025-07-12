@@ -18,7 +18,10 @@ export function useProductImages(
 	// Update existing images when saved product changes
 	useEffect(() => {
 		if (savedProduct?.images) {
-			console.log("Updating existingImages from savedProduct:", savedProduct.images);
+			console.log(
+				"Updating existingImages from savedProduct:",
+				savedProduct.images,
+			);
 			setExistingImages(savedProduct.images);
 		}
 	}, [savedProduct?.images]);
@@ -27,7 +30,10 @@ export function useProductImages(
 	 * Upload images and update product
 	 */
 	const handleUpload = async (files: UploadFile[]): Promise<boolean> => {
-		console.log("handleUpload called with:", { files: files.length, productId });
+		console.log("handleUpload called with:", {
+			files: files.length,
+			productId,
+		});
 
 		if (!productId) {
 			console.error("Product ID is missing:", productId);

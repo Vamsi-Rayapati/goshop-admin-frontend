@@ -6,6 +6,7 @@ export type Product = {
 	category?: string;
 	price: number;
 	stock: number;
+	images?: ImageResponse[];
 };
 
 // Image upload types based on the API spec
