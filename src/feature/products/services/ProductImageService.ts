@@ -194,7 +194,7 @@ export async function uploadImagesAndUpdateProduct(
 
 		// Update product with new images
 		const response = await apiService.request<Product>({
-			url: `${PRODUCTS_API}/${productId}`,
+			url: `${PRODUCTS_API}/${productId}/images`,
 			method: "PUT",
 			data: {
 				images: allImages,

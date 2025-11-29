@@ -1,12 +1,12 @@
 export const ROUTE = {
-	CONSOLE: "/console",
-	PROFILE: "/console/profile",
-	USERS: "/console/users",
-	PRODUCTS: "/console/products",
-	CATEGORIES: "/console/categories",
-	ORDERS: "/console/orders",
+	CONSOLE: "/dash",
+	PROFILE: "/dash/profile",
+	USERS: "/dash/users",
+	PRODUCTS: "/dash/products",
+	CATEGORIES: "/dash/categories",
+	ORDERS: "/dash/orders",
 
-	LOGIN: "/console/auth/login",
-	SIGNUP: "/console/auth/signup",
-	ONBOARD: "/console/auth/onboard",
+	LOGIN: "/auth/login",
+	SIGNUP: "/auth/signup",
+	ONBOARD: "/auth/onboard",
 };

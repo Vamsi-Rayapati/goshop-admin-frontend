@@ -17,7 +17,7 @@ const router = createBrowserRouter([
 	{
 		path: "/",
 		element: (
-			<Navigate to={localStorage.getItem("token") ? "/console" : ROUTE.LOGIN} />
+			<Navigate to={localStorage.getItem("token") ? "/board" : ROUTE.LOGIN} />
 		),
 	},
 	{ path: ROUTE.LOGIN,  element: <Login /> },
@@ -67,6 +67,9 @@ const router = createBrowserRouter([
 		],
 	},
 	
-]);
+	
+],{
+    basename: "/console",   // <-- Add base route here
+  });
 
 export default router;
