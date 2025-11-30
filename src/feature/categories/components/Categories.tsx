@@ -31,7 +31,7 @@ function Categories() {
 
 	useEffect(() => {
 		fetchCategories();
-	}, []);
+	}, [currentPage]);
 
 	const onDelete = async (data: Category) => {
 		const res = await deleteCategoryReq({
