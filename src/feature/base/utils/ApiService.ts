@@ -49,27 +49,47 @@ class ApiService {
 	}
 
 	private async responseErrorHandler(error: AxiosError): Promise<any> {
-		const originalRequest = error.config as InternalAxiosRequestConfig;
+		const originalRequest = error.config as InternalAxiosRequestConfig & {
+			_retry?: boolean;
+		};
 
-		if (error?.response?.status === 401) {
+		if (error?.response?.status === 401 && !originalRequest._retry) {
 			console.log("Request Failed", "Unauthorised");
-			//  originalRequest._retry = true;
+			originalRequest._retry = true;
 
-			const resp = await apiService.request({
-				url: "/auth/api/v1/token/refresh",
-				method: "POST",
-				data: {
-					refresh_token: localStorage.getItem("refreshToken"),
-					token: localStorage.getItem("token"),
-				},
-			});
+			try {
+				const resp = await this.instance.request({
+					url: "/auth/api/v1/token/refresh",
+					method: "POST",
+					data: {
+						refresh_token: localStorage.getItem("refreshToken"),
+						token: localStorage.getItem("token"),
+					},
+					headers: {
+						"Content-Type": "application/json",
+					},
+				});
 
-			if (resp.status === 200) {
-				originalRequest.headers.Authorization = `Bearer ${resp.data.token}`;
+				if (resp.status === 200) {
+					// Store the new tokens
+					localStorage.setItem("token", resp.data.token);
+					localStorage.setItem("refreshToken", resp.data.refresh_token);
 
-				console.log("Retrying Request ......");
+					// Update the authorization header with the new token
+					originalRequest.headers.Authorization = `Bearer ${resp.data.token}`;
 
-				return this.instance.request(originalRequest);
+					console.log("Retrying Request ......");
+
+					return this.instance.request(originalRequest);
+				}
+			} catch (refreshError) {
+				console.log("Token refresh failed", refreshError);
+				// Handle refresh token failure (redirect to login, etc.)
+				localStorage.clear();
+				if (window.location.pathname !== "/auth/login") {
+					window.location.href = "/console/auth/login";
+				}
+				return Promise.reject(refreshError);
 			}
 		}
 
